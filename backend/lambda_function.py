@@ -33,6 +33,12 @@ def lambda_handler(event, context):
     Main router. API Gateway sends the resource path in the event.
     """
     try:
+        method = event.get("httpMethod", "POST")
+        
+        # Handle CORS preflight
+        if method == "OPTIONS":
+            return build_response(200, {"status": "ok"})
+
         # API Key Validation (if configured)
         if API_KEY:
             headers = event.get("headers", {}) or {}
@@ -181,7 +187,7 @@ def build_response(status_code, body):
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Api-Key, x-api-key",
         },
         "body": json.dumps(body),
     }
