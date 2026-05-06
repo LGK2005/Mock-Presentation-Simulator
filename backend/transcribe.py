@@ -49,13 +49,16 @@ def transcribe_audio(audio_bytes, language="vietnamese"):
         "file": ("audio.wav", audio_bytes, "audio/wav"),
     }
 
+    # Map short language codes to full names expected by VALSEA
+    valsea_lang = "vietnamese" if language == "vi" else "english" if language == "en" else language
+
     data = {
         "model": "valsea-transcribe",
-        "language": language,
+        "language": valsea_lang,
         "response_format": "json",
     }
 
-    print(f"[VALSEA] Sending {len(audio_bytes)} bytes to ASR (lang={language})...")
+    print(f"[VALSEA] Sending {len(audio_bytes)} bytes to ASR (lang={valsea_lang})...")
 
     response = requests.post(
         VALSEA_API_URL,

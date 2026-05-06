@@ -4,11 +4,15 @@
  */
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "";
 
 async function request(endpoint, body = {}) {
+  const headers = { "Content-Type": "application/json" };
+  if (API_KEY) headers["x-api-key"] = API_KEY;
+
   const res = await fetch(`${API_BASE}${endpoint}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(body),
   });
 
@@ -50,9 +54,12 @@ export async function extractSlides() {
  * @returns {Promise<Object>} Grading payload
  */
 export async function gradeSlide(slideNumber, totalSlides, personaName, personaPrompt, audioKey, language = "vi") {
+  const headers = { "Content-Type": "application/json" };
+  if (API_KEY) headers["x-api-key"] = API_KEY;
+
   const response = await fetch(`${API_BASE}/grade-slide`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({
       slide_number: slideNumber,
       total_slides: totalSlides,

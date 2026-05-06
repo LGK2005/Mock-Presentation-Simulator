@@ -23,6 +23,7 @@ from grader import grade_slide_with_llm
 
 
 # ─── Configuration ───────────────────────────────────────────────
+API_KEY = os.environ.get("API_KEY")
 S3_BUCKET = os.environ.get("S3_BUCKET", "mock-pres-bucket")
 PDF_KEY = "current_presentation.pdf"
 
@@ -32,6 +33,13 @@ def lambda_handler(event, context):
     Main router. API Gateway sends the resource path in the event.
     """
     try:
+        # API Key Validation (if configured)
+        if API_KEY:
+            headers = event.get("headers", {}) or {}
+            request_api_key = headers.get("x-api-key") or headers.get("X-Api-Key")
+            if request_api_key != API_KEY:
+                return build_response(401, {"status": "error", "message": "Unauthorized: Invalid API Key"})
+
         # Parse route from API Gateway
         path = event.get("resource", event.get("path", ""))
         body = json.loads(event.get("body", "{}") or "{}")
