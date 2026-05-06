@@ -171,6 +171,11 @@
   background: var(--bg-card);
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
+  cursor: grab;
+}
+
+.thumbnailGallery:active {
+  cursor: grabbing;
 }
 
 /* Hide scrollbar for a cleaner look */

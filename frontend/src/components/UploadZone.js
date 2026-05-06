@@ -2,8 +2,10 @@
 
 import { useState, useRef, useCallback } from "react";
 import styles from "./UploadZone.module.css";
+import { translations } from "../lib/translations";
 
-export default function UploadZone({ onUploadComplete, isUploading }) {
+export default function UploadZone({ onUploadComplete, isUploading, language = "vi" }) {
+  const t = translations[language] || translations["vi"];
   const [dragActive, setDragActive] = useState(false);
   const [progress, setProgress] = useState(0);
   const [fileName, setFileName] = useState("");
@@ -75,14 +77,14 @@ export default function UploadZone({ onUploadComplete, isUploading }) {
         {isUploading ? (
           <>
             <div className={styles.iconUploading}>⏳</div>
-            <p className={styles.title}>Uploading {fileName}...</p>
+            <p className={styles.title}>{t.uploadingFile} {fileName}...</p>
             <div className="progress-bar" style={{ maxWidth: 300 }}>
               <div
                 className="progress-bar-fill"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className={styles.subtitle}>{progress}% complete</p>
+            <p className={styles.subtitle}>{progress}% {t.complete}</p>
           </>
         ) : (
           <>
@@ -105,10 +107,10 @@ export default function UploadZone({ onUploadComplete, isUploading }) {
               </svg>
             </div>
             <p className={styles.title}>
-              {fileName ? `✅ ${fileName}` : "Drop your presentation PDF here"}
+              {fileName ? `✅ ${fileName}` : t.dropPdfHere}
             </p>
             <p className={styles.subtitle}>
-              or click to browse • PDF only • Max 20MB
+              {t.uploadHint}
             </p>
           </>
         )}

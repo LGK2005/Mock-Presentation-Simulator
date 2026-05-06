@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./PersonaSelector.module.css";
+import { translations } from "../lib/translations";
 
 const PRESET_PERSONAS = [
   {
@@ -38,7 +39,8 @@ const PRESET_PERSONAS = [
   },
 ];
 
-export default function PersonaSelector({ selectedPersona, onSelect }) {
+export default function PersonaSelector({ selectedPersona, onSelect, language = "vi" }) {
+  const t = translations[language] || translations["vi"];
   const [customMode, setCustomMode] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customPrompt, setCustomPrompt] = useState("");
@@ -57,9 +59,9 @@ export default function PersonaSelector({ selectedPersona, onSelect }) {
   return (
     <div className={styles.container} id="persona-selector">
       <div className={styles.header}>
-        <h3 className={styles.title}>Choose Your AI Professor</h3>
+        <h3 className={styles.title}>{t.choosePersona}</h3>
         <p className={styles.subtitle}>
-          Select a persona that will grade your presentation
+          {t.selectPersonaSubtitle}
         </p>
       </div>
 
@@ -96,21 +98,21 @@ export default function PersonaSelector({ selectedPersona, onSelect }) {
           onClick={() => setCustomMode(!customMode)}
           id="custom-persona-toggle"
         >
-          🎭 Create Custom Persona
+          🎭 {t.createCustomPersona}
         </button>
 
         {customMode && (
           <div className={styles.customForm}>
             <input
               className="input"
-              placeholder="Persona name (e.g., 'Angry Gordon Ramsay')"
+              placeholder={t.customNamePlaceholder}
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
               id="custom-persona-name"
             />
             <textarea
               className="textarea"
-              placeholder="Describe the persona's personality and grading style..."
+              placeholder={t.customPromptPlaceholder}
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
               id="custom-persona-prompt"
@@ -121,7 +123,7 @@ export default function PersonaSelector({ selectedPersona, onSelect }) {
               disabled={!customName.trim() || !customPrompt.trim()}
               id="custom-persona-submit"
             >
-              Use This Persona
+              {t.useThisPersona}
             </button>
           </div>
         )}

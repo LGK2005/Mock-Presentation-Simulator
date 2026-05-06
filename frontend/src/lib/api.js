@@ -4,11 +4,16 @@
  */
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "";
 
 async function request(endpoint, body = {}) {
   const headers = { "Content-Type": "application/json" };
-  if (API_KEY) headers["x-api-key"] = API_KEY;
+  
+  // Read password from localStorage
+  let apiKey = "";
+  if (typeof window !== "undefined") {
+    apiKey = localStorage.getItem("app_password") || "";
+  }
+  if (apiKey) headers["x-api-key"] = apiKey;
 
   const res = await fetch(`${API_BASE}${endpoint}`, {
     method: "POST",
@@ -17,6 +22,13 @@ async function request(endpoint, body = {}) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("app_password");
+        window.location.reload(); // Force reload to show login screen
+      }
+      throw new Error("Unauthorized: Invalid Password");
+    }
     const errorData = await res.json().catch(() => ({}));
     throw new Error(
       errorData.message || `API error: ${res.status} ${res.statusText}`
@@ -55,7 +67,12 @@ export async function extractSlides() {
  */
 export async function gradeSlide(slideNumber, totalSlides, personaName, personaPrompt, audioKey, language = "vi") {
   const headers = { "Content-Type": "application/json" };
-  if (API_KEY) headers["x-api-key"] = API_KEY;
+  
+  let apiKey = "";
+  if (typeof window !== "undefined") {
+    apiKey = localStorage.getItem("app_password") || "";
+  }
+  if (apiKey) headers["x-api-key"] = apiKey;
 
   const response = await fetch(`${API_BASE}/grade-slide`, {
     method: "POST",
@@ -70,6 +87,13 @@ export async function gradeSlide(slideNumber, totalSlides, personaName, personaP
     }),
   });
   if (!response.ok) {
+    if (response.status === 401) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("app_password");
+        window.location.reload();
+      }
+      throw new Error("Unauthorized: Invalid Password");
+    }
     const errorData = await response.json().catch(() => ({}));
     throw new Error(
       errorData.message || `API error: ${response.status} ${response.statusText}`

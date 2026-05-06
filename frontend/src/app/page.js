@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import styles from "./page.module.css";
 import UploadZone from "../components/UploadZone";
 import PersonaSelector from "../components/PersonaSelector";
@@ -19,6 +19,8 @@ import { translations } from "../lib/translations";
  */
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
   const [phase, setPhase] = useState("UPLOAD");
   const [isUploading, setIsUploading] = useState(false);
   const [slides, setSlides] = useState([]);
@@ -28,6 +30,21 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [appLanguage, setAppLanguage] = useState("vi");
   const [presentationLanguage, setPresentationLanguage] = useState("vi");
+
+  useEffect(() => {
+    const savedPassword = localStorage.getItem("app_password");
+    if (savedPassword) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (passwordInput.trim()) {
+      localStorage.setItem("app_password", passwordInput.trim());
+      setIsAuthenticated(true);
+    }
+  };
 
   const t = translations[appLanguage] || translations["vi"];
 
@@ -89,15 +106,41 @@ export default function Home() {
     setError(null);
   }, []);
 
+  if (!isAuthenticated) {
+    return (
+      <main className={styles.loginContainer}>
+        <div className={styles.loginBackground} />
+        <div className={styles.loginCard}>
+          <span className={styles.loginIcon}>🔒</span>
+          <h1 className={styles.loginTitle}>{t.loginTitle}</h1>
+          <p className={styles.loginSubtitle}>
+            {t.loginSubtitle}
+          </p>
+          <form onSubmit={handleLogin} className={styles.loginForm}>
+            <input 
+              type="password" 
+              value={passwordInput} 
+              onChange={(e) => setPasswordInput(e.target.value)} 
+              placeholder={t.loginPlaceholder}
+              className={styles.loginInput}
+            />
+            <button type="submit" className={`btn btn-primary ${styles.loginButton}`}>
+              {t.loginButton}
+            </button>
+          </form>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className={styles.main}>
       {/* Navigation header */}
       <header className={styles.header}>
         <div className={styles.logo} onClick={handleReset} style={{ cursor: "pointer" }}>
-          <span className={styles.logoIcon}>🎓</span>
           <div>
-            <h1 className={styles.logoTitle}>MockPres</h1>
-            <p className={styles.logoTag}>AI Presentation Coach</p>
+            <h1 className={styles.logoTitle}>{t.appTitle}</h1>
+            <p className={styles.logoTag}>{t.appSubtitle}</p>
           </div>
         </div>
 
@@ -142,12 +185,12 @@ export default function Home() {
                 </span>
                 <span className={styles.phaseLabel}>
                   {p === "UPLOAD"
-                    ? "Upload"
+                    ? t.phaseUpload
                     : p === "PERSONA"
-                    ? "Persona"
+                    ? t.phasePersona
                     : p === "PRESENT"
-                    ? "Present"
-                    : "Results"}
+                    ? t.phasePresent
+                    : t.phaseResults}
                 </span>
               </div>
             ))}
@@ -155,7 +198,7 @@ export default function Home() {
 
           {phase !== "UPLOAD" && (
             <button className="btn btn-secondary" onClick={handleReset} id="btn-reset">
-              ↻ Start Over
+              {t.startOver}
             </button>
           )}
         </div>
@@ -178,8 +221,8 @@ export default function Home() {
           <div className={styles.phaseContent}>
             <div className={styles.hero}>
               <h2 className={styles.heroTitle}>
-                Practice Your Presentation with an{" "}
-                <span className={styles.gradient}>AI Professor</span>
+                {t.heroTitlePart1}
+                <span className={styles.gradient}>{t.heroTitleGradient}</span>
               </h2>
               <p className={styles.heroSubtitle}>
                 {t.uploadSubtitle}
@@ -195,14 +238,15 @@ export default function Home() {
             <PersonaSelector
               selectedPersona={persona}
               onSelect={handlePersonaSelect}
+              language={appLanguage}
             />
             {persona && (
               <div className={styles.startSection}>
                 <div className={styles.readyCard}>
                   <p className={styles.readyText}>
                     <span style={{ fontSize: "1.5rem" }}>{persona.emoji}</span>{" "}
-                    <strong>{persona.name}</strong> is ready to judge your{" "}
-                    {slides.length} slides.
+                    <strong>{persona.name}</strong> {t.isReadyToJudge} {" "}
+                    {slides.length} {t.slidesText}.
                   </p>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px", justifyContent: "center" }}>
                     <span style={{ fontSize: "1rem" }}>{t.presentationLanguage}:</span>

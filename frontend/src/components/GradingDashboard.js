@@ -29,10 +29,10 @@ export default function GradingDashboard({
   );
 
   const getOverallVerdict = (score) => {
-    if (score >= 8) return { label: "Excellent", emoji: "🌟", color: "#00b894" };
-    if (score >= 6) return { label: "Good", emoji: "👍", color: "#0984e3" };
-    if (score >= 4) return { label: "Needs Work", emoji: "📝", color: "#fdcb6e" };
-    return { label: "Poor", emoji: "😬", color: "#e17055" };
+    if (score >= 8) return { label: t.verdictExcellent, emoji: "🌟", color: "#00b894" };
+    if (score >= 6) return { label: t.verdictGood, emoji: "👍", color: "#0984e3" };
+    if (score >= 4) return { label: t.verdictNeedsWork, emoji: "📝", color: "#fdcb6e" };
+    return { label: t.verdictPoor, emoji: "😬", color: "#e17055" };
   };
 
   const verdict = getOverallVerdict(avgScore);
@@ -60,13 +60,30 @@ export default function GradingDashboard({
     }
   });
 
+  const criteriaMap = {
+    "Content Accuracy": t.critContentAccuracy,
+    "Slide Coverage": t.critSlideCoverage,
+    "Clarity & Delivery": t.critClarityDelivery,
+    "Technical Depth": t.critTechnicalDepth
+  };
+
+  const strongestAreaName = Object.keys(criteriaScores).reduce((a, b) =>
+    criteriaScores[a] > criteriaScores[b] ? a : b
+  );
+  const weakestAreaName = Object.keys(criteriaScores).reduce((a, b) =>
+    criteriaScores[a] < criteriaScores[b] ? a : b
+  );
+
   const avgCriteria = Object.entries(criteriaScores).map(([name, sum]) => ({
     name,
     score: validCount > 0 ? sum / validCount : 0
   })).sort((a, b) => a.score - b.score);
 
-  const weakestArea = avgCriteria[0]?.name || "N/A";
-  const strongestArea = avgCriteria[avgCriteria.length - 1]?.name || "N/A";
+  const weakestAreaNameFallback = avgCriteria[0]?.name || "N/A";
+  const strongestAreaNameFallback = avgCriteria[avgCriteria.length - 1]?.name || "N/A";
+  
+  const strongestArea = criteriaMap[strongestAreaName] || criteriaMap[strongestAreaNameFallback] || "N/A";
+  const weakestArea = criteriaMap[weakestAreaName] || criteriaMap[weakestAreaNameFallback] || "N/A";
   const numSlidesPresented = completedResults.length;
 
   return (

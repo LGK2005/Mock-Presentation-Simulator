@@ -46,7 +46,7 @@ export default function GradingCard({ slideNumber, grading, isLoading, appLangua
     return (
       <div className={`${styles.card} ${styles.loading}`}>
         <div className={styles.cardHeader}>
-          <span className={styles.slideNum}>Slide {slideNumber}</span>
+          <span className={styles.slideNum}>{t.slidePrefix} {slideNumber}</span>
           <div className="spinner" />
         </div>
         <p className={styles.loadingText}>{t.gradingSlide}...</p>
@@ -58,7 +58,7 @@ export default function GradingCard({ slideNumber, grading, isLoading, appLangua
     return (
       <div className={`${styles.card} ${styles.pending}`}>
         <div className={styles.cardHeader}>
-          <span className={styles.slideNum}>Slide {slideNumber}</span>
+          <span className={styles.slideNum}>{t.slidePrefix} {slideNumber}</span>
         </div>
         <p className={styles.pendingText}>{t.waitingToPresent}</p>
       </div>
@@ -76,7 +76,7 @@ export default function GradingCard({ slideNumber, grading, isLoading, appLangua
     >
       {/* Compact view */}
       <div className={styles.cardHeader}>
-        <span className={styles.slideNum}>Slide {slideNumber}</span>
+        <span className={styles.slideNum}>{t.slidePrefix} {slideNumber}</span>
         <span className={`badge ${verdict.class}`}>{verdict.label}</span>
       </div>
 
@@ -112,13 +112,13 @@ export default function GradingCard({ slideNumber, grading, isLoading, appLangua
         <div className={styles.details}>
           {/* Transcript */}
           <div className={styles.section}>
-            <h4 className={styles.sectionTitle}>📝 Your Transcript</h4>
+            <h4 className={styles.sectionTitle}>{t.transcriptTitle}</h4>
             <p className={styles.transcript}>{grading.transcript}</p>
           </div>
 
           {/* Criteria breakdown */}
           <div className={styles.section}>
-            <h4 className={styles.sectionTitle}>📊 Criteria Breakdown</h4>
+            <h4 className={styles.sectionTitle}>{t.criteriaTitle}</h4>
             <div className={styles.criteriaList}>
               {grading.grading.criteria?.map((criterion, i) => (
                 <div key={i} className={styles.criterion}>
@@ -143,7 +143,7 @@ export default function GradingCard({ slideNumber, grading, isLoading, appLangua
           {/* Missed points */}
           {grading.grading.key_missed_points?.length > 0 && (
             <div className={styles.section}>
-              <h4 className={styles.sectionTitle}>⚠️ Key Missed Points</h4>
+              <h4 className={styles.sectionTitle}>{t.missedPointsTitle}</h4>
               <ul className={styles.missedList}>
                 {grading.grading.key_missed_points.map((point, i) => (
                   <li key={i}>{point}</li>
@@ -152,12 +152,12 @@ export default function GradingCard({ slideNumber, grading, isLoading, appLangua
             </div>
           )}
 
-          <p className={styles.expandHint}>Click to collapse</p>
+          <p className={styles.expandHint}>{t.clickToCollapse}</p>
         </div>
       )}
 
       {!expanded && (
-        <p className={styles.expandHint}>Click for details</p>
+        <p className={styles.expandHint}>{t.clickForDetails}</p>
       )}
     </div>
   );

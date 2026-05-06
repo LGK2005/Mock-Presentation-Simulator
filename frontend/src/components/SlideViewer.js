@@ -25,6 +25,13 @@ export default function SlideViewer({
 
   const recorderRef = useRef(null);
   const timerRef = useRef(null);
+  const galleryRef = useRef(null);
+  
+  // Drag to scroll refs
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+  const hasDragged = useRef(false);
   const totalSlides = slides.length;
 
   // Timer for recording duration
@@ -169,12 +176,41 @@ export default function SlideViewer({
       </div>
 
       {/* Thumbnail Gallery */}
-      <div className={styles.thumbnailGallery}>
+      <div 
+        className={styles.thumbnailGallery}
+        ref={galleryRef}
+        onMouseDown={(e) => {
+          isDragging.current = true;
+          hasDragged.current = false;
+          startX.current = e.pageX - galleryRef.current.offsetLeft;
+          scrollLeft.current = galleryRef.current.scrollLeft;
+        }}
+        onMouseLeave={() => {
+          isDragging.current = false;
+        }}
+        onMouseUp={() => {
+          isDragging.current = false;
+        }}
+        onMouseMove={(e) => {
+          if (!isDragging.current) return;
+          e.preventDefault();
+          const x = e.pageX - galleryRef.current.offsetLeft;
+          const walk = (x - startX.current) * 2; // scroll speed multiplier
+          if (Math.abs(walk) > 5) {
+            hasDragged.current = true;
+          }
+          galleryRef.current.scrollLeft = scrollLeft.current - walk;
+        }}
+      >
         {slides.map((slide, i) => (
           <div
             key={i}
             className={`${styles.thumbnailCard} ${currentSlide === i ? styles.thumbnailActive : ""}`}
-            onClick={() => {
+            onClick={(e) => {
+              if (hasDragged.current) {
+                e.stopPropagation();
+                return;
+              }
               if (!isRecording && !isProcessing) {
                 setCurrentSlide(i);
               }
