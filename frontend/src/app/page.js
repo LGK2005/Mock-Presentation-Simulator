@@ -7,7 +7,7 @@ import PersonaSelector from "../components/PersonaSelector";
 import SlideViewer from "../components/SlideViewer";
 import GradingDashboard from "../components/GradingDashboard";
 import { uploadToS3 } from "../lib/s3Upload";
-import { extractSlides } from "../lib/api";
+import { extractSlides, verifyPassword } from "../lib/api";
 import { translations } from "../lib/translations";
 
 /**
@@ -21,6 +21,8 @@ import { translations } from "../lib/translations";
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [phase, setPhase] = useState("UPLOAD");
   const [isUploading, setIsUploading] = useState(false);
   const [slides, setSlides] = useState([]);
@@ -38,11 +40,26 @@ export default function Home() {
     }
   }, []);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (passwordInput.trim()) {
-      localStorage.setItem("app_password", passwordInput.trim());
-      setIsAuthenticated(true);
+    const pw = passwordInput.trim();
+    if (!pw) return;
+
+    setLoginLoading(true);
+    setLoginError("");
+
+    try {
+      const isValid = await verifyPassword(pw);
+      if (isValid) {
+        localStorage.setItem("app_password", pw);
+        setIsAuthenticated(true);
+      } else {
+        setLoginError(appLanguage === "vi" ? "Mật khẩu không đúng. Vui lòng thử lại." : "Incorrect password. Please try again.");
+      }
+    } catch {
+      setLoginError(appLanguage === "vi" ? "Không thể kết nối đến máy chủ." : "Could not connect to server.");
+    } finally {
+      setLoginLoading(false);
     }
   };
 
@@ -123,9 +140,13 @@ export default function Home() {
               onChange={(e) => setPasswordInput(e.target.value)} 
               placeholder={t.loginPlaceholder}
               className={styles.loginInput}
+              disabled={loginLoading}
             />
-            <button type="submit" className={`btn btn-primary ${styles.loginButton}`}>
-              {t.loginButton}
+            {loginError && (
+              <p className={styles.loginError}>{loginError}</p>
+            )}
+            <button type="submit" className={`btn btn-primary ${styles.loginButton}`} disabled={loginLoading}>
+              {loginLoading ? "..." : t.loginButton}
             </button>
           </form>
         </div>

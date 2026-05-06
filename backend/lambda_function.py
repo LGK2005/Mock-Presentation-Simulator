@@ -45,7 +45,9 @@ def lambda_handler(event, context):
         body = json.loads(event.get("body", "{}") or "{}")
 
         # Route to handler
-        if path == "/upload-url":
+        if path == "/verify":
+            response_body = {"status": "ok", "message": "Authenticated"}
+        elif path == "/upload-url":
             response_body = handle_upload_url(body)
         elif path == "/extract-slides":
             response_body = handle_extract_slides(body)

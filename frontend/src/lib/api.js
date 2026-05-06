@@ -39,6 +39,22 @@ async function request(endpoint, body = {}) {
 }
 
 /**
+ * Verify a password against the backend /verify endpoint.
+ * Returns true if valid, false if not.
+ */
+export async function verifyPassword(password) {
+  const res = await fetch(`${API_BASE}/verify`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": password,
+    },
+    body: JSON.stringify({}),
+  });
+  return res.ok;
+}
+
+/**
  * Get a presigned S3 upload URL.
  * @param {"pdf"|"wav"} fileType
  * @returns {Promise<{upload_url: string, key: string}>}

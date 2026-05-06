@@ -371,6 +371,18 @@
   letter-spacing: 0.5px;
 }
 
+.loginError {
+  color: #e17055;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0;
+  padding: 8px 12px;
+  background: rgba(225, 112, 85, 0.1);
+  border: 1px solid rgba(225, 112, 85, 0.3);
+  border-radius: var(--radius-md);
+  animation: slideUp 0.3s var(--ease-out);
+}
+
 @keyframes pulse {
   0% { transform: scale(1); opacity: 0.8; }
   50% { transform: scale(1.1); opacity: 1; }
