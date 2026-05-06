@@ -1,0 +1,98 @@
+.zone {
+  position: relative;
+  padding: 48px 32px;
+  border: 2px dashed var(--border-subtle);
+  border-radius: var(--radius-xl);
+  background: var(--bg-glass);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  overflow: hidden;
+  text-align: center;
+}
+
+.zone:hover {
+  border-color: var(--accent-primary);
+  background: rgba(108, 92, 231, 0.05);
+}
+
+.zone.active {
+  border-color: var(--accent-secondary);
+  background: rgba(0, 206, 201, 0.08);
+  transform: scale(1.01);
+}
+
+.zone.uploading {
+  cursor: default;
+  border-style: solid;
+  border-color: var(--accent-primary);
+}
+
+.input {
+  display: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.icon {
+  color: var(--text-muted);
+  transition: color var(--transition-base);
+}
+
+.zone:hover .icon {
+  color: var(--accent-primary);
+}
+
+.iconUploading {
+  font-size: 2.5rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.borderGlow {
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-xl);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    var(--accent-primary) 10%,
+    transparent 20%
+  );
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  z-index: 0;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 2px;
+}
+
+.zone:hover .borderGlow {
+  opacity: 0.5;
+  animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

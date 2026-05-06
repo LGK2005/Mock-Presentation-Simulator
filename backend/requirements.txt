@@ -1,0 +1,13 @@
+# Lambda dependencies for Mock Presentation Simulator
+# Note: boto3 is pre-installed in the Lambda runtime — do NOT include it here.
+
+# VALSEA ASR — HTTP requests for the transcription API
+requests==2.31.0
+
+# LLM grading — OpenAI Python SDK (GPT-4o with JSON mode)
+openai==1.82.0
+
+# PDF processing — text extraction + page-to-image rendering
+# IMPORTANT: PyMuPDF is large (~30MB). Use a Lambda Layer instead of
+# bundling it in the deployment package. See deploy.sh for instructions.
+PyMuPDF==1.25.3

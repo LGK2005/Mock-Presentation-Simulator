@@ -1,0 +1,235 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px);
+}
+
+.slideCounter {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.slideLabel {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.slideNum {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.personaBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.progressWrap {
+  flex: 1;
+  min-width: 100px;
+}
+
+/* Slide display */
+.slideArea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.slideFrame {
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slideImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.slidePlaceholder {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.slideText {
+  margin-top: 16px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px);
+  min-height: 80px;
+}
+
+.recordingControls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  justify-content: center;
+}
+
+.recordingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recordingDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #e17055;
+  animation: recording-pulse 1.5s ease-in-out infinite;
+}
+
+.recordingLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e17055;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.recordingTimer {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 60px;
+}
+
+/* Processing */
+.processingBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.processingText {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.thumbnailGallery {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 12px 20px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Hide scrollbar for a cleaner look */
+.thumbnailGallery::-webkit-scrollbar {
+  height: 6px;
+}
+.thumbnailGallery::-webkit-scrollbar-track {
+  background: transparent;
+}
+.thumbnailGallery::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+.thumbnailCard {
+  min-width: 120px;
+  max-width: 120px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
+  padding-bottom: 4px;
+}
+
+.thumbnailCard:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.thumbnailActive {
+  opacity: 1;
+}
+
+.thumbnailActive .thumbnailImage {
+  border: 2px solid var(--accent-primary);
+  box-shadow: 0 0 10px rgba(9, 132, 227, 0.3);
+}
+
+.thumbnailImage {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #1e1e2d;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  object-fit: cover;
+  transition: all 0.2s;
+}
+
+.thumbnailIndex {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-family: var(--font-inter);
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
