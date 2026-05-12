@@ -7,7 +7,7 @@ import PersonaSelector from "../components/PersonaSelector";
 import SlideViewer from "../components/SlideViewer";
 import GradingDashboard from "../components/GradingDashboard";
 import { uploadToS3 } from "../lib/s3Upload";
-import { extractSlides, verifyPassword } from "../lib/api";
+import { extractSlides } from "../lib/api";
 import { translations } from "../lib/translations";
 
 /**
@@ -19,10 +19,6 @@ import { translations } from "../lib/translations";
  */
 
 export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passwordInput, setPasswordInput] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const [loginLoading, setLoginLoading] = useState(false);
   const [phase, setPhase] = useState("UPLOAD");
   const [isUploading, setIsUploading] = useState(false);
   const [slides, setSlides] = useState([]);
@@ -32,36 +28,6 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [appLanguage, setAppLanguage] = useState("vi");
   const [presentationLanguage, setPresentationLanguage] = useState("vi");
-
-  useEffect(() => {
-    const savedPassword = localStorage.getItem("app_password");
-    if (savedPassword) {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const pw = passwordInput.trim();
-    if (!pw) return;
-
-    setLoginLoading(true);
-    setLoginError("");
-
-    try {
-      const isValid = await verifyPassword(pw);
-      if (isValid) {
-        localStorage.setItem("app_password", pw);
-        setIsAuthenticated(true);
-      } else {
-        setLoginError(appLanguage === "vi" ? "Mật khẩu không đúng. Vui lòng thử lại." : "Incorrect password. Please try again.");
-      }
-    } catch {
-      setLoginError(appLanguage === "vi" ? "Không thể kết nối đến máy chủ." : "Could not connect to server.");
-    } finally {
-      setLoginLoading(false);
-    }
-  };
 
   const t = translations[appLanguage] || translations["vi"];
 
@@ -122,37 +88,6 @@ export default function Home() {
     setLoadingSlide(null);
     setError(null);
   }, []);
-
-  if (!isAuthenticated) {
-    return (
-      <main className={styles.loginContainer}>
-        <div className={styles.loginBackground} />
-        <div className={styles.loginCard}>
-          <span className={styles.loginIcon}>🔒</span>
-          <h1 className={styles.loginTitle}>{t.loginTitle}</h1>
-          <p className={styles.loginSubtitle}>
-            {t.loginSubtitle}
-          </p>
-          <form onSubmit={handleLogin} className={styles.loginForm}>
-            <input 
-              type="password" 
-              value={passwordInput} 
-              onChange={(e) => setPasswordInput(e.target.value)} 
-              placeholder={t.loginPlaceholder}
-              className={styles.loginInput}
-              disabled={loginLoading}
-            />
-            {loginError && (
-              <p className={styles.loginError}>{loginError}</p>
-            )}
-            <button type="submit" className={`btn btn-primary ${styles.loginButton}`} disabled={loginLoading}>
-              {loginLoading ? "..." : t.loginButton}
-            </button>
-          </form>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className={styles.main}>
